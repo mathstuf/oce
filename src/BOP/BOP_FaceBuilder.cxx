@@ -23,9 +23,15 @@
 #include <Geom_Surface.hxx>
 #include <Geom_Curve.hxx>
 
+#include <Geom2dInt_Geom2dCurveTool.hxx>
+
 #include <BRep_Builder.hxx>
 #include <BRep_Tool.hxx>
+
+#include <BRepLib.hxx>
+
 #include <BRepAdaptor_Surface.hxx>
+#include <BRepAdaptor_Curve2d.hxx>
 
 #include <TopAbs_Orientation.hxx>
 
@@ -36,6 +42,9 @@
 #include <TopTools_ListOfShape.hxx>
 #include <TopTools_IndexedDataMapOfShapeListOfShape.hxx>
 #include <TopTools_ListIteratorOfListOfShape.hxx>
+#include <TopTools_DataMapOfShapeShape.hxx>
+#include <TopTools_DataMapOfShapeListOfShape.hxx>
+#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
 
 #include <TopoDS.hxx>
 #include <TopoDS_Face.hxx>
@@ -60,13 +69,8 @@
 #include <BOP_BuilderTools.hxx>
 #include <BOP_ListIteratorOfListOfConnexityBlock.hxx>
 #include <BOP_ConnexityBlock.hxx>
+#include <BRepBuilderAPI_Copy.hxx>
 
-//modified by NIZNHY-PKV Wed Feb 29 10:04:56 2012t
-#include <TopTools_DataMapOfShapeShape.hxx>
-#include <TopTools_DataMapOfShapeListOfShape.hxx>
-#include <TopTools_DataMapIteratorOfDataMapOfShapeListOfShape.hxx>
-#include <BRepAdaptor_Curve2d.hxx>
-#include <Geom2dInt_Geom2dCurveTool.hxx>
 
 static
   Standard_Boolean IsGrowthWire(const TopoDS_Shape& theWire,
@@ -78,7 +82,6 @@ static
   Standard_Boolean IsInside(const TopoDS_Shape& theHole,
 			    const TopoDS_Shape& theF2,
 			    const Handle(IntTools_Context)& theContext);
-//modified by NIZNHY-PKV Wed Feb 29 10:05:21 2012t
 static 
   void DoTopologicalVerification(TopoDS_Face& F);
 
@@ -166,34 +169,17 @@ void BOP_FaceBuilder::Do(const BOP_WireEdgeSet& aWES,
   myFace=aWES.Face();
   myWES=(BOP_WireEdgeSet*) &aWES;
   //
-  //modified by NIZNHY-PKV Wed Feb 29 10:57:31 2012f
   if (myContext.IsNull()) {
     myContext=new IntTools_Context;
   }
-  //modified by NIZNHY-PKV Wed Feb 29 10:57:34 2012t
   //
   BOP_WESCorrector aWESCor;
   aWESCor.SetWES(aWES);
   aWESCor.Do();
   BOP_WireEdgeSet& aNewWES=aWESCor.NewWES();
-  //
-  //modified by NIZNHY-PKV Wed Feb 29 09:28:06 2012f
-  /*
-  //Make Loops. Only Loops are allowed after WESCorrector 
-  MakeLoops(aNewWES);
-  //
-  BOP_BlockBuilder& aBB = myBlockBuilder;
-  BOP_WireEdgeClassifier WEC(myFace, aBB);
-  BOP_LoopSet& LS = myLoopSet;
-  //
-  myFaceAreaBuilder.InitFaceAreaBuilder(LS, WEC, bForceClass);
-
-  BuildNewFaces();
-  */
-  
+  // 
   PerformAreas(aNewWES);
-  //modified by NIZNHY-PKV Wed Feb 29 09:28:08 2012t
-  
+  //
   if (myTreatment==0) {
     DoInternalEdges(); 
   }
@@ -312,11 +298,7 @@ void BOP_FaceBuilder::DoInternalEdges()
       for (; anIt.More(); anIt.Next()) {
 	TopoDS_Face& aF=TopoDS::Face(anIt.Value());
 	//
-	//modified by NIZNHY-PKV Wed Feb 29 10:59:40 2012f
-	//IntTools_Context aCtx;
-	//bIsPointInOnFace=aCtx.IsPointInOnFace(aF, aP2D);
 	bIsPointInOnFace=myContext->IsPointInOnFace(aF, aP2D);
-	//modified by NIZNHY-PKV Wed Feb 29 10:59:43 2012t
 	//
 	if (bIsPointInOnFace) {
 	  //
@@ -483,7 +465,6 @@ void BOP_FaceBuilder::SDScales()
     myNewFaces.Append(aF);
   }
 }
-//modified by NIZNHY-PKV Wed Feb 29 08:57:52 2012f
 //=======================================================================
 //function : PerformAreas
 //purpose  : 
@@ -656,17 +637,24 @@ Standard_Boolean IsHole(const TopoDS_Shape& aW,
 {
   Standard_Boolean bIsHole;
   Standard_Real aTolF;
-  TopoDS_Shape aFE;
-  TopoDS_Face aFF;
+  TopoDS_Face aFF, aFC;
   BRep_Builder aBB;
   IntTools_FClass2d aFClass2d;
   //
-  aFE=aFace.EmptyCopied();
-  aFF=TopoDS::Face(aFE);
+  aFF=TopoDS::Face(aFace.EmptyCopied());
   aFF.Orientation(TopAbs_FORWARD);
   aBB.Add(aFF, aW);
   //
+  BRepBuilderAPI_Copy aBC;
+  //
+  aBC.Perform(aFF);
+  aFC=TopoDS::Face(aBC.Shape());
+  aFF=aFC;
+  //
   aTolF=BRep_Tool::Tolerance(aFF);
+  //modified by NIZNHY-PKV Thu Aug 23 09:18:05 2012f
+  BRepLib::SameParameter(aFF, aTolF, Standard_True);
+  //modified by NIZNHY-PKV Thu Aug 23 09:18:08 2012t
   //
   aFClass2d.Init(aFF, aTolF);
   //
@@ -714,8 +702,6 @@ Standard_Boolean IsInside(const TopoDS_Shape& theHole,
   //
   return bRet;
 }
-//modified by NIZNHY-PKV Wed Feb 29 08:57:55 2012t
-
 //=======================================================================
 //function : DoTopologicalVerification
 //purpose  : 

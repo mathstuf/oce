@@ -227,8 +227,8 @@ TopOpeBRepDS_Transition TopOpeBRep_EdgesIntersector::Transition1(const Standard_
 	    staB = staINON;
 	    staA = staINON;
 	  }
-	  else // Middle/Middle is impossible
-	    Standard_Failure::Raise("TopOpeBRep_EdgesIntersector : Situation Unknown MM");
+//	  else // Middle/Middle is impossible
+//	    Standard_Failure::Raise("TopOpeBRep_EdgesIntersector : Situation Unknown MM");
 	}
 	else { // posother = Head or End
 	  Standard_Boolean opposite = IsOpposite1();
@@ -270,9 +270,9 @@ TopOpeBRepDS_Transition TopOpeBRep_EdgesIntersector::Transition1(const Standard_
 	  staB = TopAbs_OUT;
 	  staA = staINON;
 	}
-	else {  // Middle is impossible
-	  Standard_Failure::Raise("TopOpeBRep_EdgesIntersector : Situation Unknown M");
-	}
+//	else {  // Middle is impossible
+//	  Standard_Failure::Raise("TopOpeBRep_EdgesIntersector : Situation Unknown M");
+//	}
       } // point is not a segment point
       
     } // T.Situation == IntRes2d_Unknown
