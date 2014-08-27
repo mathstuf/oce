@@ -119,7 +119,7 @@ OPTION_WITH_DEFAULT( ${PROJECT_NAME}_RPATH_FILTER_SYSTEM_PATHS "Filter out syste
 MARK_AS_ADVANCED(${PROJECT_NAME}_RPATH_FILTER_SYSTEM_PATHS)
 
 # The default for the DEB define is ON for all the platforms , in debug mode.
-# In MSVC it is not desirable to have it ON by default, since users must 
+# In MSVC it is not desirable to have it ON by default, since users must
 # compile/use the OCE debug libraries to build it's own programs in DEBUG mode.
 # DEB should be enabled by developers only, in this case
 IF ((MSVC OR BORLAND) AND CMAKE_CONFIGURATION_TYPES)
@@ -301,7 +301,7 @@ IF(${PROJECT_NAME}_VISUALISATION)
 		FIND_PATH(FREEIMAGE_INCLUDE_DIR FreeImagePlus.h DOC "Location of header files for FreeImage" ${CMAKE_SYSTEM_INCLUDE_PATH})
 		IF(FREEIMAGE_INCLUDE_DIR)
 			FIND_LIBRARY( FREEIMAGE_LIBRARY freeimageplus "Path to the freeimage library" )
-	
+
 			IF(CMAKE_CONFIGURATION_TYPES OR NMAKE)
 				FIND_LIBRARY( FREEIMAGE_LIBRARY_DEBUG freeimageplusd "Path to the freeimage debug library" )
 			ENDIF(CMAKE_CONFIGURATION_TYPES OR NMAKE)
@@ -354,10 +354,10 @@ IF(${PROJECT_NAME}_VISUALISATION)
 		ADD_DEFINITIONS(-DHAVE_FTGL_NEWER212)
 	ENDIF(NOT FTGL_V212_INCLUDE_DIR AND FTGL_INCLUDE_DIR)
 	FIND_LIBRARY(FTGL_LIBRARY ftgl "Location of ftgl library (any version)")
-	IF(CMAKE_CONFIGURATION_TYPES OR NMAKE)
+	IF(CMAKE_CONFIGURATION_TYPES OR NMAKE OR CMAKE_BUILD_TYPE STREQUAL "Debug")
 		FIND_LIBRARY(FTGL_LIBRARY_DEBUG ftgld "Location of ftgl debug library (any version)")
 		FIND_LIBRARY(FREETYPE_LIBRARY_DEBUG freetyped "Location of freetype debug library")
-	ENDIF(CMAKE_CONFIGURATION_TYPES OR NMAKE)
+	ENDIF()
 	MARK_AS_ADVANCED(X11_Xmu_LIB FTGL_V212_INCLUDE_DIR FTGL_INCLUDE_DIR FTGL_LIBRARY)
 
 	## GL2PS
@@ -441,7 +441,7 @@ IF(${PROJECT_NAME}_DRAW)
 		src/DrawResources/tdoc
 		src/DrawResources/test2xl
 		src/DrawResources/vmdltest
-		src/DrawResources/wing.brep 
+		src/DrawResources/wing.brep
 		src/DrawResources/dftree.tcl )
 ENDIF(${PROJECT_NAME}_DRAW)
 
@@ -653,10 +653,10 @@ IF(BORLAND AND NOT BORLAND_VERSION)
 			OUTPUT_VARIABLE _output
 			ERROR_QUIET
 		)
-		
+
 		string(REGEX MATCH "Embarcadero C[+][+] [0-9]+.[0-9]+"
 			_borland_version "${_output}")
-			
+
 		if(_borland_version)
 			string(REGEX MATCHALL "[0-9]+" _borland_version_list "${_borland_version}")
 			list(GET _borland_version_list 0 _borland_major)
@@ -664,14 +664,14 @@ IF(BORLAND AND NOT BORLAND_VERSION)
 		else()
 			string(REGEX MATCH "Borland C[+][+] [0-9]+].[0-9]+"
 				_borland_version "${_output}")
-			
+
 			if(_borland_version)
 				string(REGEX MATCHALL "[0-9]+" _borland_version_list "${_borland_version}")
 				list(GET _borland_version_list 0 _borland_major)
 				list(GET _borland_version_list 1 _borland_minor)
 			endif()
 		endif()
-			
+
 		# XE2 compiler?
 		if("v${_borland_major}.${_borland_minor}" STREQUAL "v6.41")
 			SET(BORLAND_VERSION "bcc32 v6.41 (RS XE2)")
@@ -694,7 +694,7 @@ IF(BORLAND AND NOT BORLAND_VERSION)
 		else()
 			SET(BORLAND_VERSION "Unknown")
 		endif()
-		
+
 		UNSET(_output)
 		UNSET(_borland_version)
 		UNSET(_borland_major)
@@ -896,7 +896,7 @@ INSTALL(FILES ${header_files}
 )
 
 SET(OCE_INSTALL_DATA_DIR ${${PROJECT_NAME}_INSTALL_DATA_DIR})
-IF (NOT MSVC) 
+IF (NOT MSVC)
 	SET(OCE_DEFAULT_CSF_GraphicShr ${${PROJECT_NAME}_INSTALL_PREFIX}/${${PROJECT_NAME}_INSTALL_LIB_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}TKOpenGl${CMAKE_SHARED_LIBRARY_SUFFIX})
 	IF (NOT ${PROJECT_NAME}_NO_LIBRARY_VERSION)
 		SET(OCE_DEFAULT_CSF_GraphicShr ${OCE_DEFAULT_CSF_GraphicShr}.${OCE_ABI_SOVERSION})
@@ -1001,7 +1001,7 @@ INSTALL(EXPORT ${PROJECT_NAME}-libraries DESTINATION ${${PROJECT_NAME}_INSTALL_C
 ############
 # In win32, dependent libraries are required to run tests
 IF(MSVC AND ${PROJECT_NAME}_TESTING)
-			
+
 		# Try to find TCL .dll filename
 		IF (${PROJECT_NAME}_DRAW)
 			GET_FILENAME_COMPONENT(TCL_BIN_DIR ${TCL_TCLSH} PATH)
@@ -1020,7 +1020,7 @@ IF(MSVC AND ${PROJECT_NAME}_TESTING)
 				IF (${PROJECT_NAME}_DRAW)
 				    ADD_CUSTOM_COMMAND(TARGET PostBuild POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${TCL_BIN_DIR}/${TCL_LIB_NAME_DIR}.dll ${LIBRARY_OUTPUT_PATH}/${config}/ VERBATIM)
 				ENDIF()
-				
+
 				# Switch between bin and bind dirs
 				IF (${config} MATCHES "Debug")
 					ADD_CUSTOM_COMMAND(TARGET PostBuild POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${OCE_BUNDLE_ROOT_PATH}/Win${BIT}/bind/ ${LIBRARY_OUTPUT_PATH}/${config}/ VERBATIM )
@@ -1049,7 +1049,7 @@ IF(MSVC AND ${PROJECT_NAME}_TESTING)
 		ELSE (CMAKE_CONFIGURATION_TYPES )
 			# Nmake support : just one configuration
 				ADD_CUSTOM_COMMAND(TARGET PostBuild POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory ${LIBRARY_OUTPUT_PATH}/ VERBATIM )
-				
+
 				IF (${PROJECT_NAME}_DRAW)
 					ADD_CUSTOM_COMMAND(TARGET PostBuild POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${TCL_BIN_DIR}/${TCL_LIB_NAME_DIR}.dll ${LIBRARY_OUTPUT_PATH}/ VERBATIM)
 				ENDIF()
@@ -1077,8 +1077,8 @@ IF(MSVC AND ${PROJECT_NAME}_TESTING)
 						ADD_CUSTOM_COMMAND(TARGET PostBuild POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "${TBB_BIN_DIR}/tbbmalloc.dll" ${LIBRARY_OUTPUT_PATH}/${config}/ VERBATIM)
 					ENDIF(${PROJECT_NAME}_TBB_MALLOC_SUPPORT AND TBB_BIN_DIR)
 				ENDIF()
-		ENDIF (CMAKE_CONFIGURATION_TYPES) 
-		
+		ENDIF (CMAKE_CONFIGURATION_TYPES)
+
 ENDIF(MSVC AND ${PROJECT_NAME}_TESTING)
 
 ##############
@@ -1109,7 +1109,7 @@ IF (${PROJECT_NAME}_BUNDLE_AUTOINSTALL)
 		GET_FILENAME_COMPONENT(TCL_LIB_NAME_DIR ${TCL_LIBRARY} NAME_WE)
 		INSTALL(FILES ${TCL_BIN_DIR}/${TCL_LIB_NAME_DIR}.dll DESTINATION ${${PROJECT_NAME}_INSTALL_BIN_DIR} CONFIGURATIONS Debug )
 		INSTALL(FILES ${TCL_BIN_DIR}/${TCL_LIB_NAME_DIR}.dll DESTINATION ${${PROJECT_NAME}_INSTALL_BIN_DIR} CONFIGURATIONS Release RelWithDebInfo MinSizeRel )
-	ENDIF(${PROJECT_NAME}_DRAW)	
+	ENDIF(${PROJECT_NAME}_DRAW)
 
 	# Install TBB libraries
 	IF(${PROJECT_NAME}_MULTITHREAD_LIBRARY STREQUAL "TBB" AND TBB_BIN_DIR)
