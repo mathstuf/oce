@@ -198,15 +198,6 @@ if(NOT OCE_NO_LIBRARY_VERSION)
 	endif(MSVC)
 endif(NOT OCE_NO_LIBRARY_VERSION)
 
-# Precompiled Headers
-if(OCE_COMPILER_SUPPORTS_PCH AND OCE_USE_PCH)
-	if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Precompiled.h)
-		#message("Using Precompiled.h")
-		enable_precompiled_headers (1 ${TOOLKIT} Precompiled.h TOOLKIT_SOURCE_FILES)
-		source_group (Precompiled FILES Precompiled.h Precompiled.cpp)
-	endif(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Precompiled.h)
-endif(OCE_COMPILER_SUPPORTS_PCH AND OCE_USE_PCH)
-
 # Add the toolkit target
 add_library(${TOOLKIT} ${OCE_LIBRARY_TYPE} ${TOOLKIT_SOURCE_FILES} ${TOOLKIT_RESOURCES} )
 
@@ -217,12 +208,6 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.7")
                  INCLUDE_DIRECTORIES "${OCE_${TOOLKIT}_INCLUDE_DIRECTORIES}")
 else()
 	include_directories(${OCE_${TOOLKIT}_INCLUDE_DIRECTORIES})
-endif()
-
-if(OCE_COMPILER_SUPPORTS_PCH AND OCE_USE_PCH)
-	if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/Precompiled.h)
-		enable_precompiled_headers (2 ${TOOLKIT} Precompiled.h TOOLKIT_SOURCE_FILES)
-	endif()
 endif()
 
 # TODO Add current toolkit header files into a source group?
