@@ -24,7 +24,7 @@
 
 #include <OpenGl_GlCore11.hxx>
 
-#include <OpenGl_glext.h>
+#include <GL/glext.h>
 
 //! Function list for GL1.2 core functionality.
 struct OpenGl_GlCore12
