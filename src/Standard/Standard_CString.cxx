@@ -87,14 +87,14 @@ Standard_Integer HashCode (const Standard_CString Value,
 #if OptJr
 # if defined(WORDS_BIGENDIAN)
   static Standard_Integer Standard_Mask_String_Left[4] =
-                  { 0 , 0x00ffffff , 0x0000ffff , 0x000000ff } ;
+                  { 0 , (Standard_Integer) 0x00ffffff , (Standard_Integer) 0x0000ffff , (Standard_Integer) 0x000000ff } ;
   static Standard_Integer Standard_Mask_String_Right[4] =
-                  { 0 , 0xff000000 , 0xffff0000 , 0xffffff00 } ;
+                  { 0 , (Standard_Integer) 0xff000000 , (Standard_Integer) 0xffff0000 , (Standard_Integer) 0xffffff00 } ;
 # else
   static Standard_Integer Standard_Mask_String_Left[4] =
-                  { 0 , 0xffffff00 , 0xffff0000 , 0xff000000 } ;
+                  { 0 , (Standard_Integer) 0xffffff00 , (Standard_Integer) 0xffff0000 , (Standard_Integer) 0xff000000 } ;
   static Standard_Integer Standard_Mask_String_Right[4] =
-                  { 0 , 0x000000ff , 0x0000ffff , 0x00ffffff } ;
+                  { 0 , (Standard_Integer) 0x000000ff , (Standard_Integer) 0x0000ffff , (Standard_Integer) 0x00ffffff } ;
 # endif
 #endif
 
