@@ -1,9 +1,9 @@
 SET(TOOLKIT TKBin)
 
 SET(TOOLKIT_MODULES
-	BinDrivers
+	#BinDrivers
 	BinMDataXtd
-	BinMPrsStd
+	#BinMPrsStd
 	BinMNaming
 	BinTools
 )
@@ -14,7 +14,7 @@ SET(TOOLKIT_DEPENDS
 	TKLCAF
 	TKG2d
 	TKCAF
-	TKV3d
+	#TKV3d
 	TKBRep
 	TKG3d
 	TKCDF
