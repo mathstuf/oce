@@ -798,11 +798,11 @@ ENDIF(MSVC_IDE)
 # based platforms and c:/${PROJECT_NAME}-VERSION/Win[32|64]/lib on windows based
 # platforms
 
-IF(WIN32)
-	SET(_PSUFFIX "Win${BIT}/")
-ELSE(WIN32)
-	SET(_PSUFFIX "")
-ENDIF(WIN32)
+#IF(WIN32)
+#	SET(_PSUFFIX "Win${BIT}/")
+#ELSE(WIN32)
+#	SET(_PSUFFIX "")
+#ENDIF(WIN32)
 STRING(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
 
 # Binaries
