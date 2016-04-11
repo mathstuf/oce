@@ -3,7 +3,7 @@ SET(TOOLKIT TKCAF)
 SET(TOOLKIT_MODULES
 	TDataXtd
 	TNaming
-	TPrsStd
+	#TPrsStd
 	AppStd
 )
 SET(TOOLKIT_DEPENDS
@@ -11,14 +11,14 @@ SET(TOOLKIT_DEPENDS
 	TKLCAF
 	TKG3d
 	TKGeomBase
-	TKV3d
-	TKService
+	#TKV3d
+	#TKService
 	TKMath
 	TKCDF
 	TKBRep
 	TKG2d
 	TKTopAlgo
-	TKV2d
+	#TKV2d
 )
 
 INCLUDE(../BuildToolkit.cmake)
