@@ -37,6 +37,7 @@
 #include <OpenGl_GraduatedTrihedron.hxx>
 #include <OpenGl_PrinterContext.hxx>
 #include <OpenGl_Structure.hxx>
+#include <PLib.hxx>
 
 #include <GL/glu.h> // gluBuild2DMipmaps()
 
@@ -1293,7 +1294,7 @@ void OpenGl_View::RenderStructs (const Handle(OpenGl_Workspace) &AWorkspace)
 //call_togl_redraw_layer2d
 void OpenGl_View::RedrawLayer2d (const Handle(OpenGl_Workspace) &AWorkspace, const Graphic3d_CView& ACView, const Aspect_CLayer2d& ACLayer)
 {
-  if (&ACLayer == NULL
+  if (IS_NULL_REF(ACLayer)
    || ACLayer.ptrLayer == NULL
    || ACLayer.ptrLayer->listIndex == 0) return;
 
