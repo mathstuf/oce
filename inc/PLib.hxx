@@ -325,5 +325,6 @@ friend class PLib_DoubleJacobiPolynomial;
 
 // other Inline functions and methods (like "C++: function call" methods)
 
+#define IS_NULL_REF(ref) ((reinterpret_cast<size_t>(&ref) & 0xFFFFFF) == 0)
 
 #endif
