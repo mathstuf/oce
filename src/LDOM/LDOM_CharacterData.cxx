@@ -21,6 +21,7 @@
 #include <LDOM_CharacterData.hxx>
 #include <LDOM_BasicText.hxx>
 #include <Standard_ProgramError.hxx>
+#include <PLib.hxx>
 
 //=======================================================================
 //function : LDOM_CharacterData
@@ -64,7 +65,7 @@ LDOM_CharacterData& LDOM_CharacterData::operator =
 void LDOM_CharacterData::setData (const LDOMString& theValue)
 {
   LDOM_BasicText& aText = (LDOM_BasicText&) Origin ();
-  if (&aText == NULL)
+  if (IS_NULL_REF(aText))
     Standard_ProgramError::Raise("LDOM_CharacterData::setData: called on void");
   aText.SetData (theValue, myDocument);
   myLength = -1;

@@ -41,6 +41,7 @@
 #include <TopExp.hxx>
 #include <TopTools_MapOfShape.hxx>
 #include <TopTools_ListIteratorOfListOfShape.hxx>
+#include <PLib.hxx>
 
 static Handle(BOP_HistoryCollector) MakeCollector(const TopoDS_Shape&       theShape1,
 						  const TopoDS_Shape&       theShape2,
@@ -85,7 +86,7 @@ static Handle(BOP_HistoryCollector) MakeCollector(const TopoDS_Shape&       theS
   myEntryType(0),
   myFuseEdges(Standard_False)
 {
-  if ((Standard_Address) &aDSFiller!=NULL) {
+  if (!IS_NULL_REF(aDSFiller)) {
     myDSFiller=(BOPTools_PDSFiller)&aDSFiller;
   }
 }
